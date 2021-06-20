@@ -2,15 +2,13 @@ import { React, Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Grid, Button, Typography } from "@material-ui/core";
-import TodaysWeather from './components/todaysWeather.js';
+import TodaysWeather from './components/TodaysWeather.js';
 import '@fontsource/roboto';
 
 export default class App extends Component {
   state = {
 
   }
-
-  
 
   render() {
     return (

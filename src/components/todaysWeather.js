@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState} from 'react';
 import { Grid, Button, Typography, Icon } from "@material-ui/core";
 import "../App.css";
 
-const todaysWeather = () => {
+const TodaysWeather = () => {
 
-    const [lat, setLat] = useState([]);
-    const [long, setLong] = useState([]);
+    const [lat, setLat] = useState(0);
+    const [long, setLong] = useState(0);
 
-    useEffect=(() => {
-        
+    useEffect (() => {
+        console.log(lat);
+        console.log(long);
     })
 
     return (
@@ -30,4 +31,4 @@ const todaysWeather = () => {
     );
 };
 
-export default todaysWeather;
+export default TodaysWeather;
