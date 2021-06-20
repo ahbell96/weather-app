@@ -7,7 +7,17 @@ import '@fontsource/roboto';
 
 export default class App extends Component {
   state = {
+    lat : [],
+    long : []
+  }
 
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.state.lat = position.coords.latitude;
+      this.state.long = position.coords.longitude;
+  })
+  console.log(this.state.lat);
+  console.log(this.state.long);
   }
 
   render() {

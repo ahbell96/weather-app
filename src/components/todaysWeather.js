@@ -4,13 +4,17 @@ import "../App.css";
 
 const TodaysWeather = () => {
 
-    const [lat, setLat] = useState(0);
-    const [long, setLong] = useState(0);
+    const [lat, setLat] = useState([]);
+    const [long, setLong] = useState([]);
 
     useEffect (() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            setLat(position.coords.latitude);
+            setLong(position.coords.longitude);
+        })
         console.log(lat);
         console.log(long);
-    })
+    }, [lat, long]);
 
     return (
         <Grid
