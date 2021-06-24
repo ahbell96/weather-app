@@ -1,19 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import { Grid, Button, Typography, Icon } from "@material-ui/core";
 import "../App.css";
+import axios from "axios";
 
 const TodaysWeather = () => {
 
-    const [lat, setLat] = useState([]);
-    const [long, setLong] = useState([]);
+    const [lat, setLat] = useState(null);
+    const [long, setLong] = useState(null);
+    const [weatherData, setWeatherData] = useState(null);
 
-    useEffect (() => {
+    useEffect(()=>{
         navigator.geolocation.getCurrentPosition((position) => {
             setLat(position.coords.latitude);
             setLong(position.coords.longitude);
         })
-        console.log(lat);
-        console.log(long);
+    }, [])
+
+    useEffect (() => {
+        if(lat && long) {
+            axios.get(`/weather?lat=${lat}&lon=${long}&appid=${process.env.REACT_APP_API_KEY}`).then(({data, config}) => {
+                setWeatherData(data);
+            })
+        }
     }, [lat, long]);
 
     return (
@@ -26,9 +34,9 @@ const TodaysWeather = () => {
         >
             <Typography variant='h2'>Weather</Typography>
             <Grid item justify="center" alignContent="center" direction="row">
-            <Icon></Icon>
+            <img src={`${process.env.REACT_APP_ICON_URL}/${weatherData ? weatherData.weather[0].icon : 'undefined'}@2x.png`}></img>
             <Typography variant='h3' style={{ padding: 10 }}>
-                Weather Data here
+                {weatherData ? weatherData.weather[0].main : ''}
             </Typography>
             </Grid>
         </Grid>

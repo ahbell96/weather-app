@@ -4,32 +4,28 @@ import "./App.css";
 import { Grid, Button, Typography } from "@material-ui/core";
 import TodaysWeather from './components/TodaysWeather.js';
 import '@fontsource/roboto';
+import axios from 'axios';
+
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+console.log(process.env);
 
 export default class App extends Component {
   state = {
-    lat : [],
-    long : []
+    lat : null,
+    long : null
   }
 
   componentDidMount() {
+    const self = this;
     navigator.geolocation.getCurrentPosition((position) => {
-      this.state.lat = position.coords.latitude;
-      this.state.long = position.coords.longitude;
+      self.setState({lat : position.coords.latitude, long : position.coords.longitude});
   })
-  console.log(this.state.lat);
-  console.log(this.state.long);
   }
 
   render() {
     return (
       <div className='App'>
         <Grid container direction='row' justify='center' alignItems='center' style={{minHeight: '100%'}}>
-          <Grid item style={{ backgroundColor: "greenyellow", flexGrow: 1}}>
-            Hello
-          </Grid>
-          <Grid item style={{ backgroundColor: "blueviolet", flexGrow: 1 }}>
-            World
-          </Grid>
           <TodaysWeather/>
         </Grid>
       </div>
