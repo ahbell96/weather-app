@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Grid, Button, Typography, Icon, TextField } from "@material-ui/core";
 import "../App.css";
 import axios from "axios";
+import WeatherSearch from "./WeatherSearch";
 
 const TodaysWeather = () => {
   const [lat, setLat] = useState(null);
@@ -10,15 +11,18 @@ const TodaysWeather = () => {
   const [celsiusTemps, setCelsiusTemps] = useState([]);
   const [convertedTempsWithLabels, setConvertedTempsWithLabels] = useState([]);
 
-  let [searchForm, setSearchForm] = useState({
-      query : "",
-  })
+  const updateWeatherWithData = ({ data, config }) => {
+    const availableTempratures = [];
 
-  const setFieldValueInForm = (event) => {
-    let updatedSearchForm = {...searchForm};
-    updatedSearchForm[event.target.name] = event.target.value;
-    setSearchForm(updatedSearchForm);
-  }
+    availableTempratures.push(
+      createTemperature(data.main.temp, "", data.weather[0].icon)
+    );
+    availableTempratures.push(createTemperature(data.main.temp_max, "high"));
+    availableTempratures.push(createTemperature(data.main.temp_min, "low"));
+
+    setConvertedTempsWithLabels(availableTempratures);
+    setWeatherData(data);
+  };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -36,9 +40,8 @@ const TodaysWeather = () => {
     // then put into state array and replace needed value
   };
 
-    // HW
-        // create axios request based on entered textfield location
-        
+  // HW
+  // create axios request based on entered textfield location
 
   useEffect(() => {
     if (lat && long) {
@@ -46,22 +49,7 @@ const TodaysWeather = () => {
         .get(
           `/weather?lat=${lat}&lon=${long}&appid=${process.env.REACT_APP_API_KEY}`
         )
-        .then(({ data, config }) => {
-          const availableTempratures = [];
-
-          availableTempratures.push(
-            createTemperature(data.main.temp, "", data.weather[0].icon)
-          );
-          availableTempratures.push(
-            createTemperature(data.main.temp_max, "high")
-          );
-          availableTempratures.push(
-            createTemperature(data.main.temp_min, "low")
-          );
-
-          setConvertedTempsWithLabels(availableTempratures);
-          setWeatherData(data);
-        });
+        .then(updateWeatherWithData);
     }
   }, [lat, long]);
 
@@ -73,12 +61,9 @@ const TodaysWeather = () => {
       justify='center'
       style={{ height: "90vh" }}
     >
-    <Grid item>
-    
-        <TextField label="Location" name={"query"} onChange={setFieldValueInForm} value={searchForm['query']}></TextField>
-        <Button>Go</Button>
+      {/* Put search compnenet here */}
+      <WeatherSearch updateWeatherWithData={updateWeatherWithData} />
 
-    </Grid>
       <Typography variant='h1' style={{ padding: 20 }}>
         {weatherData ? weatherData.name : ""}
       </Typography>
@@ -95,11 +80,13 @@ const TodaysWeather = () => {
           direction='row'
           style={{ width: "100%", display: "flex" }}
         >
-          { i.icon ? <img
-            src={`${process.env.REACT_APP_ICON_URL}/${
-                i.icon
-            }@2x.png`}
-          ></img> : ""}
+          {i.icon ? (
+            <img
+              src={`${process.env.REACT_APP_ICON_URL}/${i.icon}@2x.png`}
+            ></img>
+          ) : (
+            ""
+          )}
           <Typography variant='h2'>
             {i.temp} {i.name}
           </Typography>
